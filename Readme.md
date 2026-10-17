@@ -58,6 +58,8 @@ node tests/run-tests.js
 5. **As-Of Date Validation**: Rejects empty dates.
 6. **PDF Text Mode**: Tokenizes entities, dates, PO numbers, and redacts emails/phones.
 7. **Zero-Network Audit**: Confirms zero `fetch`, `XMLHttpRequest`, `WebSocket`, or external resource URLs.
+8. **Zero Inline Styles Audit**: Confirms strict CSP compatibility with zero inline styles.
+9. **Lookup CSV Token Parity**: Confirms lookup table has identical token count as scrubbed output.
 
 ---
 
@@ -76,43 +78,27 @@ Or simply open `index.html` directly in any web browser (`file:///...`).
 
 ## Deployment to Vercel
 
-### Option A: Vercel CLI (Fastest)
+### Option A: 1-Click Deploy via Vercel Dashboard (Recommended)
 
-1. Open a terminal in the project directory:
-   ```bash
-   cd dutyback-shield
-   ```
-2. Deploy directly to production:
-   ```bash
-   npx vercel --prod
-   ```
-3. Follow the prompts:
-   - Set up and deploy: **Yes**
-   - Which scope: *(Select your Vercel account)*
-   - Link to existing project: **No**
-   - Project name: `dutyback-shield` (or your preferred name)
-   - In which directory is your code located: `./`
-   - Modify settings: **No** (Framework: Other, Build Command: none, Output Directory: root)
+1. Go to [vercel.com/new](https://vercel.com/new).
+2. Click **Import** next to `sakethyalamanchili/dutyback-shield`.
+3. Keep default settings:
+   - **Framework Preset**: Other
+   - **Root Directory**: `./`
+   - **Build Command**: None
+   - **Output Directory**: None
+4. Click **Deploy**. Vercel will automatically read `vercel.json` for security headers.
 
-### Option B: GitHub + Vercel Dashboard
+### Option B: Deploy via Vercel CLI
 
-1. Initialize a git repository and commit:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: DutyBack Privacy Shield production release"
-   ```
-2. Push to your GitHub repository:
-   ```bash
-   git remote add origin https://github.com/<your-username>/dutyback-shield.git
-   git branch -M main
-   git push -u origin main
-   ```
-3. In [Vercel Dashboard](https://vercel.com/new):
-   - Click **Import** next to your `dutyback-shield` repository.
-   - **Framework Preset**: Select **Other**.
-   - **Build and Output Settings**: Leave empty (Build Command: none, Output Directory: `./`).
-   - Click **Deploy**.
+```bash
+npx vercel --prod
+```
+Follow the interactive prompts:
+- Link to existing project: **No**
+- Project name: `dutyback-shield`
+- Directory: `./`
+- Overwrite settings: **No**
 
 ### Final Production URL Format
 `https://dutyback-shield-<unique-id>.vercel.app` or `https://dutyback-shield.vercel.app`
