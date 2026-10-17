@@ -1,0 +1,40 @@
+DutyBack scrubbed report. As-of date: 2026-10-15. Identifiers removed or tokenized locally. Day counts were computed locally; use them as given.
+
+## Entries
+| entry_number | entry_type | hts_chapter_99 | ieepa_duty_usd | liquidation_status | days_since_liquidation | cape_days_left | protest_days_left | reconciliation_flag | type_09_filed | type_09_days_until_filing | open_protest | protest_ieepa_only | cit_plaintiff | entry_number_valid | data_flags |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ENT-001 | 01 | 9903.01.24 | 3200.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-002 | 01 | 9903.02.01 | 4100.00 | Unliquidated |  |  |  | N | N |  | N |  | N | N | malformed_entry_number |
+| ENT-003 | 01 | 9903.01.24 | 2850.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-004 | 01 | 9903.02.01 | 5000.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-005 | 01 | 9903.01.24 | 3650.00 | Unliquidated |  |  |  | N | N |  | N |  | N | N | malformed_entry_number |
+| ENT-006 | 01 | 9903.02.01 | 4400.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-007 | 01 | 9903.01.24 | 2900.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-008 | 01 | 9903.02.01 | 4750.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-009 | 01 | 9903.01.24 | 3750.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-010 | 01 | 9903.02.01 | 3800.00 |  |  |  |  | N | N |  | N |  | N | Y | status_missing |
+| ENT-011 | 01 | 9903.02.01 | 5200.00 | Liquidated | 12 | 68 | 168 | N | N |  | N |  | N | Y |  |
+| ENT-012 | 01 | 9903.01.24 | 4350.00 | Liquidated | 66 | 14 | 114 | N | N |  | N |  | N | Y |  |
+| ENT-013 | 01 | 9903.02.01 | 3900.00 | Liquidated | 30 | 50 | 150 | N | N |  | N |  | N | Y |  |
+| ENT-014 | 01 | 9903.01.24 | 4600.00 | Liquidated | 45 | 35 | 135 | N | N |  | N |  | N | Y |  |
+| ENT-015 | 01 | 9903.02.01 | 3700.00 | Liquidated | 78 | 2 | 102 | N | N |  | N |  | N | Y |  |
+| ENT-016 | 01 | 9903.01.24 | 5400.00 | Unliquidated |  |  |  | Y | N | 7 | N |  | N | Y |  |
+| ENT-017 | 06 | 9903.02.01 | 4300.00 | Unliquidated |  |  |  | Y | N | 7 | N |  | N | Y |  |
+| ENT-018 | 01 | 9903.01.24 | 4500.00 | Unliquidated |  |  |  | Y | N | 7 | N |  | N | Y |  |
+| ENT-019 | 01 | 9903.02.01 | 3600.00 | Unliquidated |  |  |  | Y | Y |  | N |  | N | Y |  |
+| ENT-020 | 01 | 9903.01.24 | 3300.00 | Unliquidated |  |  |  | Y | Y |  | N |  | N | Y |  |
+| ENT-021 | 01 | 9903.02.01 | 4100.00 | Liquidated | 100 | -20 | 80 | N | N |  | Y | Y | N | Y |  |
+| ENT-022 | 01 | 9903.01.24 | 4800.00 | Liquidated | 95 | -15 | 85 | N | N |  | N |  | N | Y |  |
+| ENT-023 | 01 | 9903.02.01 | 4200.00 | Liquidated | 130 | -50 | 50 | N | N |  | N |  | N | Y |  |
+| ENT-024 | 01 | 9903.01.24 | 4200.00 | Liquidated | 170 | -90 | 10 | N | N |  | N |  | N | Y |  |
+| ENT-025 | 01 | 9903.02.01 | 5300.00 | Liquidated | 210 | -130 | -30 | N | N |  | N |  | N | Y |  |
+| ENT-026 | 01 | 9903.01.24 | 4500.00 | Liquidated | 260 | -180 | -80 | N | N |  | N |  | N | Y |  |
+| ENT-027 | 03 | 9903.01.24 | 3100.00 | Suspended |  |  |  | N | N |  | N |  | N | Y |  |
+| ENT-028 | 01 | 9903.88.15 | 0.00 | Unliquidated |  |  |  | N | N |  | N |  | N | Y |  |
+
+## Supplier purchase records
+| po | supplier | incoterms | importer_of_record_role | ieepa_surcharge_usd |
+| --- | --- | --- | --- | --- |
+| PO-001 | SUPPLIER-001 | DDP | Supplier | 4200 |
+| PO-002 | SUPPLIER-002 | DDP | Supplier | 3900 |
+| PO-003 | SUPPLIER-003 | DDP | Forwarder | 3500 |

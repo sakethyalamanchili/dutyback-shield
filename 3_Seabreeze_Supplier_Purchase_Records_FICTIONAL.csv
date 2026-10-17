@@ -1,0 +1,5 @@
+FICTIONAL - DEMO DATA. Seabreeze purchases where Seabreeze was NOT the importer of record. These entries do not appear in Seabreeze's ES-003.
+PO Number,Supplier,Incoterms,Importer of Record,Product,Ship Date,Invoice Value (USD),IEEPA Tariff Surcharge Passed Through (USD)
+SB-PO-2025-0412,Pacific Rim Toy Works (fictional),"DDP Boca Raton, FL",Supplier,Wooden puzzle sets,2025-05-14,48000,4200
+SB-PO-2025-0587,Hanoi Craft Supply (fictional),"DDP Boca Raton, FL",Supplier,Classroom craft kits,2025-07-22,41500,3900
+SB-PO-2025-0733,Guangzhou EduPlay (fictional),"DDP Boca Raton, FL","Freight forwarder (BlueWave Logistics, fictional)",STEM building blocks,2025-09-30,37200,3500

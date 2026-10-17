@@ -1,0 +1,30 @@
+"FICTIONAL - DEMO DATA. Prepared by Coastal Customs Brokerage (fictional) for Seabreeze Learning Co., 2026-10-15."
+Entry Number,Reconciliation Flag (Y/N),Type 09 Reconciliation Entry Filed (Y/N),Type 09 Scheduled Filing Date,Open Protest (Y/N),Protest Filed Only for IEEPA Refund (Y/N),CIT Plaintiff (Y/N),Broker Notes
+ABC-1234560-4,N,N,,N,,N,
+ABC-123456-7,N,N,,N,,N,
+ABC-1234562-1,N,N,,N,,N,
+ABC-1234563-9,N,N,,N,,N,
+ABC-12345648-2,N,N,,N,,N,
+ABC-1234565-3,N,N,,N,,N,
+ABC-1234566-0,N,N,,N,,N,
+ABC-1234567-8,N,N,,N,,N,
+ABC-1234568-6,N,N,,N,,N,
+ABC-1234569-4,N,N,,N,,N,
+ABC-1234570-2,N,N,,N,,N,
+ABC-1234571-0,N,N,,N,,N,
+ABC-1234572-8,N,N,,N,,N,
+ABC-1234573-6,N,N,,N,,N,
+ABC-1234574-4,N,N,,N,,N,
+ABC-1234575-1,Y,N,2026-10-22,N,,N,Recon entry (type 09) scheduled to file Oct 22
+ABC-1234576-9,Y,N,2026-10-22,N,,N,Recon entry (type 09) scheduled to file Oct 22
+ABC-1234577-7,Y,N,2026-10-22,N,,N,Recon entry (type 09) scheduled to file Oct 22
+ABC-1234578-5,Y,Y,,N,,N,Recon entry filed Aug 2026
+ABC-1234579-3,Y,Y,,N,,N,Recon entry filed Aug 2026
+ABC-1234580-1,N,N,,Y,Y,N,Protest filed Sep 2026
+ABC-1234581-9,N,N,,N,,N,
+ABC-1234582-7,N,N,,N,,N,
+ABC-1234583-5,N,N,,N,,N,
+ABC-1234584-3,N,N,,N,,N,
+ABC-1234585-0,N,N,,N,,N,
+ABC-1234586-8,N,N,,N,,N,AD/CVD order on this product
+ABC-1234587-6,N,N,,N,,N,

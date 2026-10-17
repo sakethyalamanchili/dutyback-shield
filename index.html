@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DutyBack Privacy Shield | Zero-Network Customs Redaction</title>
+  <meta name="description" content="Local, browser-only customs data redaction for DutyBack on FAU's owlONE. Strip identifying details from ACE ES-003 files before AI agent ingestion with zero network uploads.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand" aria-label="DutyBack Privacy Shield Home">
+        <svg class="brand-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M32 4L10 13V30C10 44 19 54 32 60C45 54 54 44 54 30V13L32 4Z" fill="#002244" stroke="#00C2CB" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M32 10L16 17V30C16 41 23 49 32 54C41 49 48 41 48 30V17L32 10Z" fill="#001428" opacity="0.8"/>
+          <path d="M24 31L29.5 36.5L40 25" stroke="#00E5C0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="46" r="2.5" fill="#CC0000" />
+        </svg>
+        <div class="brand-title">
+          DutyBack <span class="brand-subtitle">Privacy Shield</span>
+          <span class="badge-fau">FAU owlONE</span>
+        </div>
+      </a>
+
+      <div class="header-status-group">
+        <div class="status-chip chip-safe" title="All processing occurs locally in browser RAM">
+          <span class="status-dot"></span> Runs in your browser
+        </div>
+        <div id="selftest_chip" class="status-chip chip-safe" role="status" aria-live="polite">
+          <span class="status-dot"></span> Self-test: Running...
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" aria-labelledby="hero-heading">
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Client-Side Privacy Enclave
+          </div>
+          <h1 id="hero-heading" class="hero-title">
+            Your customs data <span class="highlight-cyan">never leaves</span> your computer.
+          </h1>
+          <p class="hero-subtitle">
+            Strip company names, real entry numbers, addresses, and proprietary broker notes in seconds. Compute local deadlines, generate tokens, and hand a safe, scrubbed file to DutyBack.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" id="hero_scrub_files">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Scrub my files
+            </button>
+            <button class="btn btn-secondary" id="hero_try_sample">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Try with sample data
+            </button>
+          </div>
+        </div>
+
+        <!-- Animated Redaction Visual Card -->
+        <div class="redaction-card animating" id="redaction_visual_card">
+          <div class="redaction-card-header">
+            <div class="redaction-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Live Local Redaction Simulation
+            </div>
+            <button class="replay-btn" id="replay_redaction_btn" aria-label="Replay redaction sweep animation">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+              Replay
+            </button>
+          </div>
+          <div class="redaction-table-wrap">
+            <table class="redaction-table" aria-label="Fictional redaction demonstration table">
+              <thead>
+                <tr>
+                  <th scope="col">Identifier</th>
+                  <th scope="col">Entity</th>
+                  <th scope="col">Duty (USD)</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="redact-cell redact-1">
+                      <span class="redact-original">ABC-9821430-1</span>
+                      <span class="redact-sweep"></span>
+                      <span class="redact-token">ENT-001</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="redact-cell redact-2">
+                      <span class="redact-original">Atlantic Logistics LLC</span>
+                      <span class="redact-sweep"></span>
+                      <span class="redact-token">PARTY-001</span>
+                    </div>
+                  </td>
+                  <td>$3,200.00</td>
+                  <td class="status-liquidated">Liquidated (70d)</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="redact-cell redact-3">
+                      <span class="redact-original">ABC-9821431-9</span>
+                      <span class="redact-sweep"></span>
+                      <span class="redact-token">ENT-002</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="redact-cell redact-4">
+                      <span class="redact-original">Pacific Rim Supplies</span>
+                      <span class="redact-sweep"></span>
+                      <span class="redact-token">PARTY-002</span>
+                    </div>
+                  </td>
+                  <td>$4,100.00</td>
+                  <td class="status-unliquidated">Unliquidated</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="redaction-card-footer">
+            <span>Fictional demonstration data</span>
+            <span class="badge-memory">&#10003; 100% Client-Side Memory</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-section" aria-labelledby="how-heading">
+      <div class="section-head">
+        <span class="section-tag">Zero-Leak Architecture</span>
+        <h2 id="how-heading" class="section-title">How the Privacy Shield Works</h2>
+        <p class="section-desc">Before your customs records touch FAU's owlONE AI platform, our client-side enclave strips all identifying elements.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-icon-wrap" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <h3 class="step-title">1. Drop your files</h3>
+          <p class="step-text">Add your ACE ES-003 export and broker status list. Files are parsed strictly inside your browser's local sandbox memory.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-icon-wrap" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <h3 class="step-title">2. We scrub them locally</h3>
+          <p class="step-text">Only needed columns are retained. Identifying entry numbers become tokens (ENT-001), day counts compute locally, and a regex safety scan verifies zero leaks.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-icon-wrap" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+          </div>
+          <h3 class="step-title">3. Attach to DutyBack</h3>
+          <p class="step-text">Download the clean scrubbed .txt report and attach it directly to the DutyBack agent in owlONE. Your private key stays on your computer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Tool Section -->
+    <section class="tool-section" id="tool_section" aria-labelledby="tool-heading">
+      <div class="section-head section-head-tight">
+        <span class="section-tag">Interactive Privacy Tool</span>
+        <h2 id="tool-heading" class="section-title">Clean Your Customs Records</h2>
+      </div>
+
+      <div class="tool-card">
+        <!-- Main Scrubbing Tool -->
+        <div class="tool-main-body" id="s1">
+          <!-- Sample Data Banner -->
+          <div class="sample-bar">
+            <div class="sample-bar-text">
+              <strong>Need a quick demo?</strong> Click to load the three fictional Seabreeze test files and run the scrub automatically.
+            </div>
+            <button class="btn btn-secondary btn-sm" id="tool_try_sample">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Try with sample data (Fictional)
+            </button>
+          </div>
+
+          <!-- Drop Zones Grid -->
+          <div class="dropzones-grid">
+            <!-- ES-003 Zone -->
+            <div class="dropzone" id="drop_es" tabindex="0" role="button" aria-label="Drop ACE ES-003 entry report CSV here or click to browse">
+              <input type="file" id="f_es" class="dropzone-input" accept=".csv,text/csv" aria-hidden="true">
+              <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="10 15 12 13 14 15"/><line x1="12" y1="13" x2="12" y2="21"/></svg>
+              <span class="dropzone-badge badge-required">Required</span>
+              <div class="dropzone-title">ACE ES-003 Entry Report</div>
+              <p class="dropzone-desc">Drag &amp; drop CSV or click to browse</p>
+              <div class="dropzone-status" id="status_es"></div>
+            </div>
+
+            <!-- Broker Zone -->
+            <div class="dropzone" id="drop_bk" tabindex="0" role="button" aria-label="Drop Broker status list CSV here or click to browse">
+              <input type="file" id="f_bk" class="dropzone-input" accept=".csv,text/csv" aria-hidden="true">
+              <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span class="dropzone-badge badge-recommended">Recommended</span>
+              <div class="dropzone-title">Broker Status List</div>
+              <p class="dropzone-desc">Recon flags, protest &amp; CIT details</p>
+              <div class="dropzone-status" id="status_bk"></div>
+            </div>
+
+            <!-- Supplier Zone -->
+            <div class="dropzone" id="drop_su" tabindex="0" role="button" aria-label="Drop Supplier purchase records CSV here or click to browse">
+              <input type="file" id="f_su" class="dropzone-input" accept=".csv,text/csv" aria-hidden="true">
+              <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              <span class="dropzone-badge badge-optional">Optional</span>
+              <div class="dropzone-title">Supplier Purchase Records</div>
+              <p class="dropzone-desc">DDP and passed-through surcharges</p>
+              <div class="dropzone-status" id="status_su"></div>
+            </div>
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="controls-bar">
+            <div class="date-group">
+              <label for="asof">As-of date for day counts:</label>
+              <input type="date" id="asof" class="date-input" required>
+            </div>
+            <button class="btn btn-primary btn-scrub" id="run">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>
+              Scrub now
+            </button>
+          </div>
+
+          <!-- Results Panel -->
+          <div class="results-panel" id="results_panel">
+            <div id="report"></div>
+
+            <!-- Download and Actions Output Box -->
+            <div id="outbox" class="outbox-wrap">
+              <div class="next-step-callout">
+                <div>
+                  <strong class="next-step-title">Next Step: Ingest into DutyBack</strong>
+                  <p class="next-step-desc">
+                    Download the scrubbed file below and attach it in DutyBack on owlONE.
+                  </p>
+                </div>
+                <a href="#" class="btn btn-safe owlone-link" role="button">
+                  Open DutyBack in owlONE
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
+
+              <div class="download-action-bar">
+                <button class="btn btn-primary btn-download-main" id="dltxt">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download scrubbed file (.txt)
+                </button>
+              </div>
+
+              <div class="lookup-csv-container">
+                <a href="#" id="dl_lookup_csv" class="lookup-csv-link">Optional: download lookup table (.csv)</a>
+                <p class="lookup-csv-notice">Contains your real entry numbers. Keep it private and never attach it to DutyBack.</p>
+              </div>
+
+              <textarea id="out" class="is-hidden" aria-hidden="true"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsed Advanced Accordion -->
+        <details class="advanced-accordion" id="advanced_accordion">
+          <summary class="advanced-summary">
+            <span class="advanced-summary-label">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              Advanced: PDF Text &amp; Token Restoration
+            </span>
+            <span class="advanced-badge">Optional Tools</span>
+          </summary>
+          <div class="advanced-body">
+            <!-- Tool A: Scrub text from a PDF -->
+            <div class="advanced-tool-block" id="s2">
+              <h3 class="advanced-tool-title">Scrub text from a PDF</h3>
+              <p class="tab-intro-text">
+                Open your customs PDF document, select all text, copy, and paste it below. (Scanned PDFs without OCR cannot be pasted).
+              </p>
+              <div class="form-group">
+                <label for="names" class="form-label-bold">
+                  Names to remove (one per line: importer, broker, forwarders, individuals, cities, ports):
+                </label>
+                <textarea id="names" class="textarea-clean textarea-names" placeholder="Harborline Home Goods LLC&#10;Harborline&#10;Atlantic Gateway Customs Brokers"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="pdftext" class="form-label-bold">
+                  Text from the PDF:
+                </label>
+                <textarea id="pdftext" class="textarea-clean textarea-pdf" placeholder="Paste text here..."></textarea>
+              </div>
+              <button class="btn btn-primary" id="runtext">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4"/><path d="M12 18v4"/></svg>
+                Scrub text
+              </button>
+
+              <div id="textreport" class="mt-16"></div>
+
+              <div class="mt-16">
+                <label for="textout" class="form-label-bold">
+                  Scrubbed Text Output:
+                </label>
+                <textarea id="textout" class="textarea-clean" readonly placeholder="Scrubbed text appears here"></textarea>
+              </div>
+
+              <div class="action-toolbar">
+                <button class="btn btn-primary" id="dltext">Download scrubbed text (.txt)</button>
+                <button class="btn btn-outline-navy" id="copytext">Copy text</button>
+                <button class="btn btn-secondary is-hidden" id="dltxt2">Download as .txt</button>
+                <button class="btn btn-secondary btn-key-file" id="dlkey2">Download key file (keep private)</button>
+              </div>
+            </div>
+
+            <div class="advanced-separator"></div>
+
+            <!-- Tool B: Restore real values -->
+            <div class="advanced-tool-block" id="s3">
+              <h3 class="advanced-tool-title">Restore real values</h3>
+              <p class="tab-intro-text-lg">
+                When DutyBack gives you recommendations for tokenized entries (e.g. <code>ENT-003</code>), use your private key file to rehydrate real numbers locally on your computer.
+              </p>
+
+              <div class="form-group-lg">
+                <label for="keyfile" class="form-label-bold">
+                  Step A. Select your local key file (.json):
+                </label>
+                <input type="file" id="keyfile" class="date-input" accept=".json,application/json">
+                <div id="keystatus" class="keystatus-text"></div>
+              </div>
+
+              <div class="form-group-lg">
+                <label for="tokens" class="form-label-bold">
+                  Step B. Paste text from owlONE containing tokens (e.g. ENT-001, SUPPLIER-002):
+                </label>
+                <textarea id="tokens" class="textarea-clean textarea-tokens" placeholder="Paste owlONE advice or report with tokens here..."></textarea>
+              </div>
+
+              <button class="btn btn-primary" id="restore">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Restore real values
+              </button>
+
+              <div class="mt-20">
+                <label for="restored" class="form-label-bold">
+                  Restored text (Contains real identifiers — do not share):
+                </label>
+                <textarea id="restored" class="textarea-clean textarea-pdf" placeholder="Restored text appears here"></textarea>
+              </div>
+
+              <div class="action-toolbar">
+                <button class="btn btn-outline-navy" id="copyrestored">Copy restored text</button>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- "What Leaves Your Computer? Nothing." Panel -->
+    <section class="proof-section" aria-labelledby="proof-heading">
+      <div class="proof-card">
+        <div class="network-meter">
+          <div class="meter-num" id="network_count">0</div>
+          <div class="meter-title">Network Requests</div>
+          <div class="meter-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Zero Leaks Verified
+          </div>
+        </div>
+
+        <div>
+          <span class="section-tag">Privacy Guarantee</span>
+          <h2 id="proof-heading" class="section-title proof-heading">
+            What leaves your computer? Nothing.
+          </h2>
+          <ul class="proof-bullets">
+            <li class="proof-bullet">
+              <div class="proof-bullet-icon" aria-hidden="true">&#10003;</div>
+              <div class="proof-bullet-text">
+                <strong>Zero network code</strong>
+                <p>No backend, no analytics, no external fonts or CDN scripts. All CSV processing runs strictly in your browser's local sandbox memory.</p>
+              </div>
+            </li>
+            <li class="proof-bullet">
+              <div class="proof-bullet-icon" aria-hidden="true">&#10003;</div>
+              <div class="proof-bullet-text">
+                <strong>Only needed columns kept</strong>
+                <p>Strict column allowlists permanently discard importer names, filer codes, consignee addresses, and internal broker comments.</p>
+              </div>
+            </li>
+            <li class="proof-bullet">
+              <div class="proof-bullet-icon" aria-hidden="true">&#10003;</div>
+              <div class="proof-bullet-text">
+                <strong>Final automated safety scan</strong>
+                <p>Every generated output is scanned with multi-pattern regexes for emails, phone numbers, SSNs, EINs, IBANs, and real entry numbers before allowing any download.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="faq-section" aria-labelledby="faq-heading">
+      <div class="section-head">
+        <span class="section-tag">Frequently Asked Questions</span>
+        <h2 id="faq-heading" class="section-title">Privacy &amp; Security Details</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-1">
+            <span>What is removed from my customs files?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-content" id="faq-ans-1">
+            Importer names, filer codes, broker names, broker notes, consignee information, physical addresses, contact phone numbers, emails, and all columns not strictly required by DutyBack are permanently dropped. Real entry numbers, PO numbers, and supplier names are replaced with locally generated tokens (e.g., ENT-001, SUPPLIER-001).
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-2">
+            <span>What does DutyBack still see?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-content" id="faq-ans-2">
+            DutyBack only sees anonymized tokens (e.g., ENT-001), HTS Chapter 99 numbers (e.g., 9903.01.24), duty dollar amounts, liquidation statuses, and locally computed day counts (days since liquidation, days until CAPE deadline, days until protest deadline). <strong>Important notice:</strong> FAU's owlONE platform logs interactions under standard FAU IT and cloud policies, so we do not claim data inside the chat is never stored. The Privacy Shield ensures your proprietary customs identity never enters the chat in the first place.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-3">
+            <span>Can I use this page completely offline?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-content" id="faq-ans-3">
+            Yes! Because this application contains zero external dependencies, CDN scripts, or remote web fonts, you can save the page to your local drive (File &gt; Save Page As...) and double-click to open it offline with no internet connection (<code>file://</code>). It operates identically.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-4">
+            <span>What if my file has extra proprietary columns?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-content" id="faq-ans-4">
+            Any column not explicitly on DutyBack's strict allowlist is automatically discarded during parsing. The tool reports exactly which columns were dropped so you can verify that internal SKU numbers, margin notes, or supplier pricing were excluded.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-5">
+            <span>What is the key file and how should I handle it?</span>
+            <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-content" id="faq-ans-5">
+            The key file (<code>dutyback-key-KEEP-PRIVATE.json</code>) contains the mapping between tokenized aliases (like ENT-001) and your actual entry numbers. It is created on-the-fly and stored only when you click download. Keep this file strictly private on your computer; never upload it or paste it into a chat. You can use the "Restore real values" tab to reverse tokens when DutyBack advises filing on a specific entry.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-disclaimer">
+        <strong>Disclaimer:</strong> Demo data is fictional. Not legal advice. DutyBack does not file customs entries; your licensed customs broker or your organization files directly in ACE.
+      </div>
+      <div>
+        <a href="#" class="btn btn-secondary btn-sm owlone-link" role="button">
+          Open DutyBack in owlONE
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Classic Scripts in dependency order (works on file://) -->
+  <script src="js/shield-core.js"></script>
+  <script src="js/sample-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

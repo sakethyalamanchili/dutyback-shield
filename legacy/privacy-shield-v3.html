@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DutyBack Privacy Shield v3</title>
+    <style>
+        :root {
+            --blue: #003366;
+            --red: #CC0000;
+            --gray: #CCCCCC;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--blue);
+            margin: 0;
+            background: #fff;
+        }
+
+        header {
+            background: var(--blue);
+            color: #fff;
+            padding: 18px 28px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        header p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            opacity: .9;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 28px 60px;
+        }
+
+        .banner {
+            border-left: 5px solid var(--red);
+            background: #f6f7f9;
+            padding: 10px 14px;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .tabs button {
+            border: 1px solid var(--gray);
+            background: #fff;
+            color: var(--blue);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tabs button.on {
+            background: var(--blue);
+            color: #fff;
+        }
+
+        section {
+            display: none;
+            margin-top: 16px;
+        }
+
+        section.on {
+            display: block;
+        }
+
+        .box {
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .box b {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--gray);
+            padding: 4px 6px;
+            text-align: left;
+        }
+
+        th {
+            background: #eef1f5;
+        }
+
+        input,
+        textarea {
+            font-size: 13px;
+            padding: 4px;
+            border: 1px solid var(--gray);
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        button.act {
+            background: var(--red);
+            color: #fff;
+            border: 0;
+            padding: 9px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 6px 6px 0 0;
+        }
+
+        button.sec {
+            background: #fff;
+            color: var(--blue);
+            border: 1px solid var(--blue);
+            padding: 8px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 6px 6px 0 0;
+        }
+
+        .warn {
+            color: var(--red);
+            font-size: 13px;
+        }
+
+        .ok {
+            font-size: 13px;
+        }
+
+        .small {
+            font-size: 12px;
+            opacity: .85;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>DutyBack Privacy Shield</h1>
+        <p>Remove identifying details from customs files before they go into owlONE. Runs only in your browser.</p>
+    </header>
+    <main>
+        <div class="banner">
+            <b>Nothing is uploaded.</b> This page has no network code. Files are read, scrubbed and shown on this
+            computer only.
+            Only the columns DutyBack needs are kept; every other column is dropped. The key file is saved only as a
+            download: keep it on your computer and never paste it into a chat.
+        </div>
+        <p id="selftest" class="small">Self-test: running...</p>
+        <div class="tabs">
+            <button id="t1" class="on">1. Scrub CSV files</button>
+            <button id="t2">2. Scrub text from a PDF</button>
+            <button id="t3">3. Restore real values</button>
+        </div>
+
+        <section id="s1" class="on">
+            <div class="box"><b>ACE ES-003 entry report (CSV) - required</b><input type="file" id="f_es"
+                    accept=".csv,text/csv"></div>
+            <div class="box"><b>Broker status list (CSV) - recommended</b><input type="file" id="f_bk"
+                    accept=".csv,text/csv"></div>
+            <div class="box"><b>Supplier purchase records (CSV) - optional</b><input type="file" id="f_su"
+                    accept=".csv,text/csv"></div>
+            <p>As-of date for the day counts: <input type="date" id="asof"></p>
+            <button class="act" id="run">Scrub now</button>
+            <div id="report"></div>
+            <div id="outbox" style="display:none">
+                <button class="act" id="dltxt">Download scrubbed file (.txt) to attach in owlONE</button>
+                <button class="sec" id="copy">Or copy the text to paste</button>
+                <button class="sec" id="dlkey">Download key file (keep private)</button>
+                <p class="small"><b>Next:</b> go back to the DutyBack agent in owlONE and attach the downloaded .txt
+                    file with the + button. Do not attach the key file.</p>
+                <p class="small">Scrubbed text (select all and copy if the Copy button is blocked by your browser):</p>
+                <textarea id="out" readonly></textarea>
+            </div>
+        </section>
+
+        <section id="s2">
+            <p class="small">Open the PDF, select all, copy, and paste the text here. Scanned PDFs have no text to copy.
+            </p>
+            <p><b>Names to remove</b> (one per line: your company, your broker, suppliers, forwarders, people, cities,
+                ports, and product names):</p>
+            <textarea id="names" style="height:90px"
+                placeholder="Harborline Home Goods LLC&#10;Harborline&#10;Atlantic Gateway Customs Brokers"></textarea>
+            <p><b>Text from the PDF</b></p>
+            <textarea id="pdftext"></textarea>
+            <button class="act" id="runtext">Scrub text</button>
+            <div id="textreport"></div>
+            <textarea id="textout" readonly placeholder="Scrubbed text appears here"></textarea>
+            <button class="act" id="dltext">Download scrubbed text (.txt) to attach in owlONE</button>
+            <button class="sec" id="copytext">Or copy the text to paste</button>
+            <button class="sec" id="dltxt2">Download as .txt (attach this in owlONE)</button>
+            <button class="sec" id="dlkey2">Download key file (keep private)</button>
+        </section>
+
+        <section id="s3">
+            <p><b>Step A.</b> Choose your key file: <input type="file" id="keyfile" accept=".json,application/json"></p>
+            <p><b>Step B.</b> Paste text from owlONE that contains tokens (for example ENT-003):</p>
+            <textarea id="tokens"></textarea>
+            <button class="act" id="restore">Restore real values</button>
+            <p class="small">Masked or dropped values are one-way and are not restored.</p>
+            <textarea id="restored" placeholder="Restored text appears here"></textarea>
+            <button class="sec" id="copyrestored">Copy restored text</button>
+        </section>
+    </main>
+
+    <script>
+        /*__CORE_START__*/
+        const Shield = (function () {
+            const ENTRY_RE = /^[A-Z0-9]{3}-\d{7}-\d$/;
+            const PATTERNS = {
+                email: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g,
+                phone: /(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b/g,
+                ssn: /\b\d{3}-\d{2}-\d{4}\b/g,
+                ein: /\b\d{2}-\d{7}\b/g,
+                iban: /\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b/g,
+                longdigits: /\b\d{9,17}\b/g
+            };
+
+            function parseCSVRaw(text) {
+                const rows = []; let row = [], cur = '', q = false;
+                text = text.replace(/^\uFEFF/, '');
+                for (let i = 0; i < text.length; i++) {
+                    const c = text[i];
+                    if (q) { if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+                    else if (c === '"') q = true;
+                    else if (c === ',') { row.push(cur); cur = ''; }
+                    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cur); cur = ''; if (row.length > 1 || row[0] !== '') rows.push(row); row = []; }
+                    else cur += c;
+                }
+                if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+                return rows;
+            }
+            // Real exports start with banner lines (company, broker, dates). They are removed, never passed on.
+            function parseTable(text) {
+                const rows = parseCSVRaw(text); const pre = [];
+                while (rows.length && rows[0].filter(c => c.trim() !== '').length <= 1) pre.push(rows.shift().join(' ').trim());
+                const header = rows.shift() || [];
+                return { header, rows, preamble: pre.filter(Boolean) };
+            }
+            function toCSV(header, rows) {
+                const esc = v => { v = String(v == null ? '' : v); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+                return [header, ...rows].map(r => r.map(esc).join(',')).join('\n');
+            }
+            const norm = h => h.toLowerCase().replace(/\([^)]*\)/g, ' ').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+            const yn = v => { v = String(v || '').trim().toUpperCase(); return v === 'Y' || v === 'YES' || v === 'TRUE' ? 'Y' : (v === 'N' || v === 'NO' || v === 'FALSE' ? 'N' : ''); };
+
+            function daysBetween(a, b) { // a - b in days, ISO dates
+                const A = Date.UTC(+a.slice(0, 4), +a.slice(5, 7) - 1, +a.slice(8, 10)), B = Date.UTC(+b.slice(0, 4), +b.slice(5, 7) - 1, +b.slice(8, 10));
+                return Math.round((A - B) / 86400000);
+            }
+            const isISO = s => /^\d{4}-\d{2}-\d{2}$/.test((s || '').trim());
+
+            // Allowlists: only these columns are ever used. Anything else is dropped (and reported by name).
+            const ES_USED = { entry_number: 'entry_number', entry_type: 'entry_type', hts_chapter_99_number: 'hts', ieepa_duty_amount: 'duty', duty_on_line: 'duty', ieepa_duty_usd: 'duty', liquidation_status: 'status', liquidation_date: 'liq_date' };
+            const ES_IGNORED_OK = ['days_since_liquidation', 'days_since_liquidation_as_of', 'filer_code', 'line_number', 'country_of_origin', 'entry_date'];
+            const BK_USED = { entry_number: 'entry_number', reconciliation_flag: 'recon', type_09_reconciliation_entry_filed: 't09', type_09_scheduled_filing_date: 't09_date', open_protest: 'protest', protest_filed_only_for_ieepa_refund: 'protest_ieepa', cit_plaintiff: 'cit' };
+            const SU_USED = { po_number: 'po', supplier: 'supplier', incoterms: 'incoterms', importer_of_record: 'ior', ieepa_tariff_surcharge_passed_through: 'surcharge' };
+
+            function mapColumns(header, used, ignoredOk) {
+                const idx = {}, dropped = [], derived = [];
+                header.forEach((h, i) => {
+                    const n = norm(h);
+                    if (used[n]) idx[used[n]] = i; else dropped.push(h);
+                });
+                return { idx, dropped };
+            }
+
+            function makeTokener(key) {
+                const counters = {}, reverse = {};
+                return (prefix, value) => {
+                    const k = prefix + '|' + value;
+                    if (!reverse[k]) { counters[prefix] = (counters[prefix] || 0) + 1; const t = prefix + '-' + String(counters[prefix]).padStart(3, '0'); reverse[k] = t; key.tokens[t] = value; }
+                    return reverse[k];
+                };
+            }
+            const roleOf = v => { v = String(v || '').toLowerCase(); if (/forwarder|logistics|freight/.test(v)) return 'Forwarder'; if (/^(the )?(supplier|seller|manufacturer|vendor)/.test(v)) return 'Supplier'; if (/^(importer|buyer|company|self|us)$/.test(v.trim())) return 'Buyer'; return 'Other (check)'; };
+
+            function scrubCSVs(esText, bkText, suText, asOf) {
+                const key = { version: 2, created: new Date().toISOString().slice(0, 10), tokens: {} };
+                const tok = makeTokener(key);
+                const report = { preambleRemoved: 0, dropped: {}, flags: {}, notes: [] };
+                const bump = f => { report.flags[f] = (report.flags[f] || 0) + 1; };
+                const es = parseTable(esText); report.preambleRemoved += es.preamble.length;
+                const ec = mapColumns(es.header, ES_USED);
+                report.dropped.es = ec.dropped;
+                if (ec.idx.entry_number === undefined) throw new Error('No entry number column found in the ES-003 file.');
+                let bk = null, bc = null, bmap = {};
+                if (bkText) {
+                    bk = parseTable(bkText); report.preambleRemoved += bk.preamble.length; bc = mapColumns(bk.header, BK_USED); report.dropped.bk = bc.dropped;
+                    bk.rows.forEach(r => { const e = (r[bc.idx.entry_number] || '').trim(); if (e) bmap[e] = r; });
+                }
+                const seen = {}; const g = (r, c, k) => (c.idx[k] === undefined ? '' : (r[c.idx[k]] || '').trim());
+                const outHeader = ['entry_number', 'entry_type', 'hts_chapter_99', 'ieepa_duty_usd', 'liquidation_status', 'days_since_liquidation', 'cape_days_left', 'protest_days_left', 'reconciliation_flag', 'type_09_filed', 'type_09_days_until_filing', 'open_protest', 'protest_ieepa_only', 'cit_plaintiff', 'entry_number_valid', 'data_flags'];
+                const entries = es.rows.filter(r => (r[ec.idx.entry_number] || '').trim() !== '').map(r => {
+                    const raw = (r[ec.idx.entry_number] || '').trim(); const flags = [];
+                    const valid = ENTRY_RE.test(raw); if (!valid) { flags.push('malformed_entry_number'); bump('malformed_entry_number'); }
+                    if (seen[raw]) { flags.push('duplicate_entry'); bump('duplicate_entry'); } seen[raw] = true;
+                    const status = g(r, ec, 'status'), liq = g(r, ec, 'liq_date');
+                    let days = '', cape = '', prot = '';
+                    if (isISO(liq) && asOf) { const d = daysBetween(asOf, liq); days = String(d); cape = String(80 - d); prot = String(180 - d); }
+                    if (/^liquidated/i.test(status) && !isISO(liq)) { flags.push('liquidated_no_date'); bump('liquidated_no_date'); }
+                    if (status === '' && !isISO(liq)) { flags.push('status_missing'); bump('status_missing'); }
+                    let b = null, recon = '', t09 = '', t09d = '', prot_open = '', pie = '', cit = '';
+                    if (bk) {
+                        b = bmap[raw];
+                        if (!b) { flags.push('no_broker_row'); bump('no_broker_row'); }
+                        else {
+                            recon = yn(g(b, bc, 'recon')); t09 = yn(g(b, bc, 't09')); prot_open = yn(g(b, bc, 'protest')); pie = yn(g(b, bc, 'protest_ieepa')); cit = yn(g(b, bc, 'cit'));
+                            const sd = g(b, bc, 't09_date'); if (isISO(sd) && asOf) t09d = String(daysBetween(sd, asOf));
+                        }
+                    }
+                    const duty = g(r, ec, 'duty').replace(/[$,]/g, '');
+                    return [tok('ENT', raw), g(r, ec, 'entry_type'), g(r, ec, 'hts'), duty, status, days, cape, prot, recon, t09, t09d, prot_open, pie, cit, valid ? 'Y' : 'N', flags.join(';')];
+                });
+                let sup = null;
+                if (suText) {
+                    const su = parseTable(suText); report.preambleRemoved += su.preamble.length; const sc = mapColumns(su.header, SU_USED); report.dropped.su = sc.dropped;
+                    const sh = ['po', 'supplier', 'incoterms', 'importer_of_record_role', 'ieepa_surcharge_usd'];
+                    sup = {
+                        header: sh, rows: su.rows.filter(r => r.join('').trim() !== '').map(r => {
+                            const inc = g(r, sc, 'incoterms').split(/[\s,]+/)[0] || '';
+                            return [tok('PO', g(r, sc, 'po')), tok('SUPPLIER', g(r, sc, 'supplier')), inc, roleOf(g(r, sc, 'ior')), g(r, sc, 'surcharge').replace(/[$,]/g, '')];
+                        })
+                    };
+                }
+                return { entries: { header: outHeader, rows: entries }, suppliers: sup, key, report };
+            }
+
+            function rehydrate(text, key) {
+                const toks = Object.keys(key.tokens).sort((a, b) => b.length - a.length);
+                let out = text;
+                toks.forEach(t => { out = out.replace(new RegExp('(^|[^A-Za-z0-9-])' + t.replace(/[-]/g, '\\-') + '(?![A-Za-z0-9-])', 'g'), (m, p) => p + key.tokens[t]); });
+                return out;
+            }
+
+            // Text mode (PDF copy and paste): known names, entry numbers, invoice and protest numbers, and PII patterns
+            function scrubText(text, names) {
+                const key = { version: 2, created: new Date().toISOString().slice(0, 10), tokens: {} }; const tok = makeTokener(key);
+                const report = { namesReplaced: 0, entries: 0, patterns: 0, possibleNames: [] };
+                const list = (names || []).map(s => s.trim()).filter(Boolean).sort((a, b) => b.length - a.length);
+                let out = text;
+                list.forEach(n => { const re = new RegExp(n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+'), 'gi'); out = out.replace(re, m => { report.namesReplaced++; return tok('PARTY', n.toLowerCase()); }); });
+                const swap = (re, prefix) => { out = out.replace(re, m => { report.entries++; return tok(prefix, m); }); };
+                swap(/\b[A-Z0-9]{3}-\d{6,8}-\d\b/g, 'ENT');
+                swap(/\b\d{4}-\d{2}-\d{6}\b/g, 'PROTEST');
+                swap(/\bINV-[A-Z0-9]+(?:-[A-Z0-9]+)*\b/g, 'INV');
+                swap(/\b[A-Z]{2}-PO-\d{4}-\d{4}\b/g, 'PO');
+                out = out.replace(/\b(FOB|CIF|CFR|EXW|FCA|DAP|DDP|CPT|CIP|DPU)[ \t]+[A-Z][A-Za-z.]*(?:[ \t,]+[A-Z][A-Za-z.]*)*/g, (m, t) => { report.patterns++; return t + ' [PLACE]'; });
+                out = out.replace(/\$\s?\d+(?:\.\d+)?\s?(?:M|MM|B|million|billion)\b(?:\s+(?:in\s+)?revenue)?/gi, () => { report.patterns++; return '[REDACTED]'; });
+                out = out.replace(/\b\d[\d,]*\s+(?:employees|staff|workers)\b/gi, () => { report.patterns++; return '[REDACTED]'; });
+                for (const k of ['email', 'phone', 'ssn', 'ein', 'iban', 'longdigits']) { PATTERNS[k].lastIndex = 0; out = out.replace(PATTERNS[k], () => { report.patterns++; return '[REDACTED]'; }); }
+                const sus = /\b([A-Z][\w&.'-]*(?:[ \t]+[A-Z][\w&.'-]*)*[ \t]+(?:Co\.?|LLC|Ltd\.?|Inc\.?|Corp\.?|Company|Partners|Brokers|Brokerage|Logistics|Collective|Ceramics|Housewares|Textile|Manufacturing|Supply|Freight|Customs|Group))\b/g;
+                const found = {}; let m; while ((m = sus.exec(out))) found[m[1]] = 1; report.possibleNames = Object.keys(found);
+                return { text: out, key, report };
+            }
+
+            // Final safety scan on anything about to be shown or downloaded. Reports kinds only, never the values.
+            function scanOutput(text) {
+                const checks = { email: PATTERNS.email, phone: PATTERNS.phone, ssn: PATTERNS.ssn, ein: PATTERNS.ein, iban: PATTERNS.iban, long_number: PATTERNS.longdigits, real_entry_number: /\b[A-Z0-9]{3}-\d{6,8}-\d\b/g };
+                const found = {};
+                Object.keys(checks).forEach(k => { const m = String(text || '').match(checks[k]); if (m) found[k] = m.length; });
+                return found;
+            }
+
+            function asPipeTable(header, rows) {
+                const line = r => '| ' + r.map(v => String(v).replace(/\|/g, '/')).join(' | ') + ' |';
+                return [line(header), line(header.map(() => '---')), ...rows.map(line)].join('\n');
+            }
+            function entriesText(res, asOf) {
+                let t = 'DutyBack scrubbed report. As-of date: ' + asOf + '. Identifiers removed or tokenized locally. Day counts were computed locally; use them as given.\n\n## Entries\n' + asPipeTable(res.entries.header, res.entries.rows);
+                if (res.suppliers) t += '\n\n## Supplier purchase records\n' + asPipeTable(res.suppliers.header, res.suppliers.rows);
+                return t;
+            }
+            return { parseTable, parseCSVRaw, toCSV, scrubCSVs, scrubText, rehydrate, entriesText, scanOutput, ENTRY_RE, norm };
+        })();
+        /*__CORE_END__*/
+
+        /*__UI_START__*/
+        (function () {
+            const $ = id => document.getElementById(id);
+            const read = f => new Promise(res => { if (!f) return res(''); const r = new FileReader(); r.onload = () => res(r.result); r.readAsText(f); });
+            $('asof').value = new Date().toISOString().slice(0, 10);
+            ['t1', 't2', 't3'].forEach((t, i) => { $(t).onclick = () => { ['t1', 't2', 't3'].forEach((u, j) => { $(u).className = (i === j ? 'on' : ''); $('s' + (j + 1)).className = (i === j ? 'on' : ''); }); }; });
+            let result = null, textResult = null, key = null;
+            function download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); }
+            function copyText(text, btn, done) {
+                const fb = () => { const t = $('out'); const keep = t.value; t.value = text; t.focus(); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) { } btn.textContent = ok ? done : 'Select the text and press Ctrl+C'; };
+                if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => { btn.textContent = done; }, fb); else fb();
+            }
+            $('run').onclick = async () => {
+                try {
+                    const es = await read($('f_es').files[0]); if (!es) { alert('Choose the ES-003 CSV first.'); return; } if (!$('asof').value) { alert('Choose the as-of date first.'); return; }
+                    result = Shield.scrubCSVs(es, await read($('f_bk').files[0]), await read($('f_su').files[0]), $('asof').value);
+                    const r = result.report, d = r.dropped;
+                    const fl = Object.keys(r.flags).map(k => k + ': ' + r.flags[k]).join(', ') || 'none';
+                    $('report').innerHTML = '<p class="ok"><b>Done.</b> Banner lines removed: ' + r.preambleRemoved + '. Entries: ' + result.entries.rows.length + (result.suppliers ? ', supplier records: ' + result.suppliers.rows.length : '') + '. Data flags: ' + fl + '.</p>' +
+                        '<p class="small">Dropped columns - ES-003: ' + ((d.es || []).join(', ') || 'none') + (d.bk ? '. Broker list: ' + (d.bk.join(', ') || 'none') : '') + (d.su ? '. Suppliers: ' + (d.su.join(', ') || 'none') : '') + '.</p>';
+                    const outText = Shield.entriesText(result, $('asof').value);
+                    const leaks = Shield.scanOutput(outText);
+                    const leakKinds = Object.keys(leaks).map(k => k + ' (' + leaks[k] + ')').join(', ');
+                    if (leakKinds) {
+                        result = null; $('out').value = ''; $('outbox').style.display = 'none';
+                        $('report').innerHTML += '<p class="warn"><b>Blocked.</b> The scrubbed text still contains what looks like: ' + leakKinds + '. Nothing can be downloaded. Remove or fix that column in your CSV and scrub again.</p>';
+                        return;
+                    }
+                    if (!$('f_bk').files[0]) $('report').innerHTML += '<p class="warn"><b>No broker status list added.</b> DutyBack will skip the Phase 2, protest and Phase 3 checks. Add the broker CSV and scrub again for a full analysis.</p>';
+                    $('report').innerHTML += '<p class="ok">Final safety scan passed: no emails, phone numbers, ID numbers or real entry numbers found.</p>';
+                    $('out').value = outText; $('outbox').style.display = 'block';
+                } catch (e) { $('report').innerHTML = '<p class="warn">' + e.message + '</p>'; }
+            };
+            $('dltxt').onclick = () => download('dutyback-scrubbed-' + $('asof').value + '.txt', $('out').value, 'text/plain');
+            $('copy').onclick = () => copyText($('out').value, $('copy'), 'Copied. Paste into owlONE.');
+            $('dlkey').onclick = () => download('dutyback-key-KEEP-PRIVATE.json', JSON.stringify(result.key, null, 2), 'application/json');
+            $('runtext').onclick = () => {
+                textResult = Shield.scrubText($('pdftext').value, $('names').value.split('\n'));
+                const r = textResult.report;
+                $('textreport').innerHTML = '<p class="ok">Names replaced: ' + r.namesReplaced + '. Entry, invoice, protest and PO numbers tokenized: ' + r.entries + '. Pattern redactions: ' + r.patterns + '.</p>' +
+                    (r.possibleNames.length ? '<p class="warn">Possible names still in the text (add them to the names box and scrub again): ' + r.possibleNames.join('; ') + '</p>' : '<p class="ok">No other company-like names detected.</p>');
+                const tOut = 'DutyBack scrubbed text. Identifiers removed or tokenized locally.\n\n' + textResult.text;
+                const tLeaks = Shield.scanOutput(tOut); const tKinds = Object.keys(tLeaks).map(k => k + ' (' + tLeaks[k] + ')').join(', ');
+                if (tKinds) { $('textout').value = ''; $('textreport').innerHTML += '<p class="warn"><b>Blocked.</b> The text still contains what looks like: ' + tKinds + '. Edit the text and scrub again.</p>'; return; }
+                $('textout').value = tOut;
+            };
+            $('dltext').onclick = () => download('dutyback-scrubbed-text.txt', $('textout').value, 'text/plain');
+            $('copytext').onclick = () => { $('textout').select(); try { document.execCommand('copy'); $('copytext').textContent = 'Copied. Paste into owlONE.'; } catch (e) { } };
+            $('dltxt2').onclick = () => download('dutyback-scrubbed-text.txt', $('textout').value, 'text/plain');
+            $('dlkey2').onclick = () => download('dutyback-key-KEEP-PRIVATE.json', JSON.stringify(textResult.key, null, 2), 'application/json');
+            $('keyfile').onchange = e => { const rd = new FileReader(); rd.onload = () => { key = JSON.parse(rd.result); }; rd.readAsText(e.target.files[0]); };
+            $('restore').onclick = () => { if (!key) { alert('Choose your key file first.'); return; } $('restored').value = Shield.rehydrate($('tokens').value, key); };
+            $('copyrestored').onclick = () => { $('restored').select(); try { document.execCommand('copy'); } catch (e) { } };
+
+            // Integrity self-test: proves this copy of the page still scrubs, joins and restores as designed
+            (function () {
+                const es = 'FICTIONAL. Acme Co. export for Beta LLC\nEntry Number,Filer Code,Entry Type,Entry Date,HTS Chapter 99 Number,Country of Origin,IEEPA Duty Amount (USD),Liquidation Status,Liquidation Date\nABC-1234560-4,ABC,01,2025-12-09,9903.01.24,CN,3200.00,Unliquidated,\nABC-123456-7,ABC,01,2025-12-15,9903.02.01,VN,4100.00,Liquidated,2026-08-07\nABC-1234562-1,ABC,21,2025-12-22,9903.01.24,CN,2850.00,Liquidated,';
+                const bk = 'Prepared by Gamma Brokerage\nEntry Number,Reconciliation Flag (Y/N),Type 09 Reconciliation Entry Filed (Y/N),Type 09 Scheduled Filing Date,Open Protest (Y/N),Protest Filed Only for IEEPA Refund (Y/N),CIT Plaintiff (Y/N),Broker Notes\nABC-1234560-4,Y,N,2026-10-22,N,,N,call Jane Doe 561-555-0100\nABC-123456-7,N,N,,Y,Y,N,';
+                const su = 'Header line\nPO Number,Supplier,Incoterms,Importer of Record,Product,Ship Date,Invoice Value (USD),IEEPA Tariff Surcharge Passed Through (USD)\nSB-PO-1,Delta Toys Ltd.,"DDP Boca Raton, FL","Freight forwarder (Echo Logistics)",Puzzles,2025-05-14,48000,4200';
+                const checks = [];
+                try {
+                    const r = Shield.scrubCSVs(es, bk, su, '2026-10-16'); const H = r.entries.header, c = n => H.indexOf(n), R = r.entries.rows;
+                    const txt = Shield.entriesText(r, '2026-10-16');
+                    checks.push(['banner lines removed, no party names leak', !/Acme|Beta|Gamma|Delta|Echo|Jane|ABC-|Puzzles|Boca/.test(txt)]);
+                    checks.push(['entry numbers tokenized and joined to broker data', R[0][c('entry_number')] === 'ENT-001' && R[0][c('reconciliation_flag')] === 'Y' && R[1][c('open_protest')] === 'Y']);
+                    checks.push(['days computed locally (70) with 10 days left', R[1][c('days_since_liquidation')] === '70' && R[1][c('cape_days_left')] === '10']);
+                    checks.push(['malformed number and missing date flagged', R[1][c('entry_number_valid')] === 'N' && /liquidated_no_date/.test(R[2][c('data_flags')])]);
+                    checks.push(['type 09 days until filing computed (6)', R[0][c('type_09_days_until_filing')] === '6']);
+                    checks.push(['unneeded columns dropped (country, entry date, notes)', H.indexOf('country_of_origin') < 0 && !/CN|2025-12-09/.test(R[0].join('|'))]);
+                    checks.push(['supplier role and incoterms reduced to categories', r.suppliers.rows[0][2] === 'DDP' && r.suppliers.rows[0][3] === 'Forwarder']);
+                    checks.push(['final scan passes clean output', Object.keys(Shield.scanOutput(txt)).length === 0]);
+                    checks.push(['final scan catches a planted email, phone and entry number', (function (f) { return f.email && f.phone && f.real_entry_number; })(Shield.scanOutput('x a@b.com 561-555-0100 ABC-1234560-4'))]);
+                    checks.push(['restore returns the real entry number', Shield.rehydrate('File ENT-001 now', r.key) === 'File ABC-1234560-4 now']);
+                    const t = Shield.scrubText('Importer: Beta LLC prepared by Gamma Brokerage. Entry ABC-1234560-4 contact a@b.com 561-555-0100', ['Beta LLC', 'Gamma Brokerage']);
+                    checks.push(['text mode removes names, numbers and contact details', !/Beta|Gamma|ABC-|a@b|561/.test(t.text) && /ENT-001/.test(t.text)]);
+                } catch (e) { checks.push(['page ran without an error: ' + e.message, false]); }
+                const bad = checks.filter(c => !c[1]);
+                document.getElementById('selftest').innerHTML = bad.length ? '<span class="warn"><b>Self-test FAILED</b> (' + bad.map(b => b[0]).join('; ') + '). Do not use this copy.</span>'
+                    : '<b>Self-test passed</b> (' + checks.length + ' checks): this copy scrubs, joins and restores as designed.';
+            })();
+        })();
+        /*__UI_END__*/
+    </script>
+</body>
+
+</html>

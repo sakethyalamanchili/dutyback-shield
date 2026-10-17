@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#003366" />
+      <stop offset="100%" stop-color="#0A2540" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D4B2" />
+      <stop offset="100%" stop-color="#0088FF" />
+    </linearGradient>
+  </defs>
+  <!-- Outer Shield -->
+  <path d="M32 4L10 13V30C10 44 19 54 32 60C45 54 54 44 54 30V13L32 4Z" fill="url(#shieldGrad)" stroke="url(#glowGrad)" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Inner Shield Core -->
+  <path d="M32 10L16 17V30C16 41 23 49 32 54C41 49 48 41 48 30V17L32 10Z" fill="#001833" opacity="0.8"/>
+  <!-- Keyhole / Privacy Check Mark -->
+  <path d="M24 31L29.5 36.5L40 25" stroke="#00E5C0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Red accent dot (FAU red) -->
+  <circle cx="32" cy="46" r="2.5" fill="#CC0000" />
+</svg>
