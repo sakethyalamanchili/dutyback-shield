@@ -33,7 +33,7 @@ dutyback-shield/
 ├── legacy/
 │   └── privacy-shield-v3.html   # Preserved original index.html reference
 ├── tests/
-│   ├── run-tests.js             # Automated 7-point Node.js test suite
+│   ├── run-tests.js             # Automated 10-point Node.js test suite
 │   ├── serve.js                 # Local preview server with Vercel CSP headers
 │   └── fixtures/                # Fictional CSVs and verified output fixture
 ├── vercel.json                  # Production headers, cleanUrls, and CSP enforcement
@@ -59,7 +59,8 @@ node tests/run-tests.js
 6. **PDF Text Mode**: Tokenizes entities, dates, PO numbers, and redacts emails/phones.
 7. **Zero-Network Audit**: Confirms zero `fetch`, `XMLHttpRequest`, `WebSocket`, or external resource URLs.
 8. **Zero Inline Styles Audit**: Confirms strict CSP compatibility with zero inline styles.
-9. **Lookup CSV Token Parity**: Confirms lookup table has identical token count as scrubbed output.
+9. **Lookup CSV Token Parity**: Confirms lookup table (`dutyback-lookup-table.csv`) has identical token count as scrubbed output.
+10. **owlONE Destination & No-Iframe Compliance**: Validates `OWLONE_URL` points to the designated chat and guarantees zero embedded `<iframe>` elements.
 
 ---
 

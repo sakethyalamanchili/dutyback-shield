@@ -270,6 +270,27 @@ runTest('Lookup CSV has the same token count as the scrubbed file', () => {
   assert(html.includes('id="advanced_accordion"'), 'Missing collapsed advanced accordion in index.html');
 });
 
+// ---------------------------------------------------------------------------
+// Test 10: OWLONE_URL equals target chat link and index.html contains no iframe
+// ---------------------------------------------------------------------------
+runTest('OWLONE_URL equals target chat link and index.html contains no iframe', () => {
+  const { OWLONE_URL } = require('../js/app.js');
+  const expectedUrl = 'https://owlone.fau.edu/chat/858e4234-d789-4261-a229-0a10f5299f1b';
+  assert.strictEqual(OWLONE_URL, expectedUrl, `OWLONE_URL must be ${expectedUrl}`);
+
+  const html = fs.readFileSync(path.resolve(__dirname, '../index.html'), 'utf8');
+  assert(!/<iframe\b/i.test(html), 'index.html must not contain any iframe elements');
+
+  // Verify all owlone-link anchors have target="_blank" and rel="noopener noreferrer"
+  const owlLinks = html.match(/<a[^>]*class="[^"]*owlone-link[^"]*"[^>]*>/g) || [];
+  assert(owlLinks.length > 0, 'No owlone-link anchors found in index.html');
+  for (const link of owlLinks) {
+    assert(link.includes('target="_blank"'), `owlone link missing target="_blank": ${link}`);
+    assert(link.includes('rel="noopener noreferrer"'), `owlone link missing rel="noopener noreferrer": ${link}`);
+    assert(link.includes(expectedUrl), `owlone link missing expected href: ${link}`);
+  }
+});
+
 console.log(`\n====================================================`);
 console.log(`Results: ${passed} / ${total} tests passed.`);
 console.log(`====================================================`);

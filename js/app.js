@@ -4,7 +4,7 @@
  */
 
 // Target URL for DutyBack agent on FAU's owlONE platform
-const OWLONE_URL = "https://owlone.fau.edu";
+const OWLONE_URL = "https://owlone.fau.edu/chat/858e4234-d789-4261-a229-0a10f5299f1b";
 
 (function () {
   "use strict";
@@ -22,6 +22,19 @@ const OWLONE_URL = "https://owlone.fau.edu";
   let csvResult = null;
   let textResult = null;
   let restoreKey = null;
+
+  let selfTestPassed = false;
+  let currentNetworkCount = 0;
+
+  function updateZeroLeaksBadge() {
+    const badge = $("zero_leaks_badge");
+    if (!badge) return;
+    if (selfTestPassed && currentNetworkCount === 0) {
+      badge.classList.remove("is-hidden");
+    } else {
+      badge.classList.add("is-hidden");
+    }
+  }
 
   // -------------------------------------------------------------------------
   // 1. Integrity Self-Test
@@ -129,7 +142,9 @@ const OWLONE_URL = "https://owlone.fau.edu";
         );
       }
     }
-    return bad.length === 0;
+    selfTestPassed = bad.length === 0;
+    updateZeroLeaksBadge();
+    return selfTestPassed;
   }
 
   // -------------------------------------------------------------------------
@@ -146,6 +161,8 @@ const OWLONE_URL = "https://owlone.fau.edu";
     }
     const el = $("network_count");
     if (el) el.textContent = String(count);
+    currentNetworkCount = count;
+    updateZeroLeaksBadge();
   }
 
   // -------------------------------------------------------------------------
@@ -294,105 +311,7 @@ const OWLONE_URL = "https://owlone.fau.edu";
   }
 
   // -------------------------------------------------------------------------
-  // 6. Before / After Preview Generator
-  // -------------------------------------------------------------------------
-  function renderBeforeAfterPreview(rawEsText, result) {
-    const container = $("before_after_container");
-    if (!container) return;
-
-    const rawParsed = Shield.parseTable(rawEsText);
-    const rawHeader = rawParsed.header;
-    const rawRows = rawParsed.rows.slice(0, 5);
-
-    const scrubbedHeader = result.entries.header;
-    const scrubbedRows = result.entries.rows.slice(0, 5);
-
-    let html = '<div class="preview-box">';
-    html += '<div class="preview-header">';
-    html +=
-      '<h4 class="preview-title">Before &amp; After Comparison (First 5 Rows)</h4>';
-    html +=
-      '<span class="status-chip chip-safe">&#128274; Safe In-Memory Inspection Only</span>';
-    html += "</div>";
-
-    html += '<div class="table-responsive">';
-    html += '<table class="table-customs">';
-    html += "<thead><tr>";
-    html += "<th>Row</th>";
-    html += "<th>Raw Entry #</th>";
-    html += "<th>Raw Filer</th>";
-    html += "<th>Tokenized Entry #</th>";
-    html += "<th>Duty (USD)</th>";
-    html += "<th>Status</th>";
-    html += "<th>Days Left</th>";
-    html += "<th>Data Flags</th>";
-    html += "</tr></thead><tbody>";
-
-    const rawEntryIdx = rawHeader.findIndex(
-      (h) => Shield.norm(h) === "entry_number"
-    );
-    const rawFilerIdx = rawHeader.findIndex(
-      (h) => Shield.norm(h) === "filer_code"
-    );
-
-    const sEntryIdx = scrubbedHeader.indexOf("entry_number");
-    const sDutyIdx = scrubbedHeader.indexOf("ieepa_duty_usd");
-    const sStatusIdx = scrubbedHeader.indexOf("liquidation_status");
-    const sDaysIdx = scrubbedHeader.indexOf("cape_days_left");
-    const sFlagsIdx = scrubbedHeader.indexOf("data_flags");
-
-    for (let i = 0; i < scrubbedRows.length; i++) {
-      const rRow = rawRows[i] || [];
-      const sRow = scrubbedRows[i] || [];
-
-      const rawEntry = rawEntryIdx >= 0 ? rRow[rawEntryIdx] || "" : "";
-      const rawFiler = rawFilerIdx >= 0 ? rRow[rawFilerIdx] || "" : "";
-
-      const tokEntry = sRow[sEntryIdx] || "";
-      const duty = sRow[sDutyIdx] || "";
-      const status = sRow[sStatusIdx] || "";
-      const days = sRow[sDaysIdx] || "";
-      const flags = sRow[sFlagsIdx] || "";
-
-      html += "<tr>";
-      html += "<td>#" + (i + 1) + "</td>";
-      html +=
-        '<td><span class="cell-redacted">' +
-        escapeHtml(rawEntry) +
-        "</span></td>";
-      html +=
-        '<td><span class="cell-redacted">' +
-        escapeHtml(rawFiler) +
-        "</span></td>";
-      html +=
-        '<td><span class="cell-token">' +
-        escapeHtml(tokEntry) +
-        "</span></td>";
-      html += "<td>$" + escapeHtml(duty) + "</td>";
-      html += "<td>" + escapeHtml(status || "—") + "</td>";
-      html +=
-        "<td>" +
-        (days ? escapeHtml(days) + "d" : '<span class="text-dim">—</span>') +
-        "</td>";
-      html +=
-        "<td>" +
-        (flags
-          ? '<span class="chip chip-danger">' + escapeHtml(flags) + "</span>"
-          : '<span class="tag-clean">clean</span>') +
-        "</td>";
-      html += "</tr>";
-    }
-
-    html += "</tbody></table></div>";
-    html +=
-      '<p class="small preview-caption">Redacted cells are stripped permanently. Only the tokenized output is saved to the downloaded file.</p>';
-    html += "</div>";
-
-    container.innerHTML = html;
-  }
-
-  // -------------------------------------------------------------------------
-  // 7. Scrub CSV Action
+  // 6. Scrub CSV Action
   // -------------------------------------------------------------------------
   function scrubCSVData() {
     const es = files.es.text;
@@ -539,9 +458,6 @@ const OWLONE_URL = "https://owlone.fau.edu";
           "<div><strong>Final safety scan passed.</strong> Zero emails, phone numbers, ID numbers, or raw entry numbers found in scrubbed output.</div></div>";
 
         if (reportEl) reportEl.innerHTML = repHtml;
-
-        // Render Before/After Preview
-        renderBeforeAfterPreview(es, csvResult);
 
         // Update output textarea & display download controls
         if (outTextarea) outTextarea.value = outText;
@@ -864,11 +780,6 @@ const OWLONE_URL = "https://owlone.fau.edu";
       copyToClipboard(outText, this, "Copied! Ready for owlONE");
     });
 
-    $("dltxt2")?.addEventListener("click", () => {
-      const outText = $("textout") ? $("textout").value : "";
-      downloadFile("dutyback-scrubbed-text.txt", outText, "text/plain");
-    });
-
     $("dlkey2")?.addEventListener("click", () => {
       if (!textResult || !textResult.key) return;
       downloadFile(
@@ -932,7 +843,7 @@ const OWLONE_URL = "https://owlone.fau.edu";
   }
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { generateLookupCSV };
+    module.exports = { generateLookupCSV, OWLONE_URL };
   }
 })();
 

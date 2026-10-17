@@ -47,7 +47,7 @@
             Client-Side Privacy Enclave
           </div>
           <h1 id="hero-heading" class="hero-title">
-            Your customs data <span class="highlight-cyan">never leaves</span> your computer.
+            Your raw customs files <span class="highlight-cyan">never leave</span> your computer.
           </h1>
           <p class="hero-subtitle">
             Strip company names, real entry numbers, addresses, and proprietary broker notes in seconds. Compute local deadlines, generate tokens, and hand a safe, scrubbed file to DutyBack.
@@ -167,7 +167,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
           </div>
           <h3 class="step-title">3. Attach to DutyBack</h3>
-          <p class="step-text">Download the clean scrubbed .txt report and attach it directly to the DutyBack agent in owlONE. Your private key stays on your computer.</p>
+          <p class="step-text">Download the clean scrubbed .txt report and attach it to the DutyBack agent in owlONE. Optionally keep the lookup table (.csv) on your computer, and never attach it.</p>
         </div>
       </div>
     </section>
@@ -251,7 +251,7 @@
                     Download the scrubbed file below and attach it in DutyBack on owlONE.
                   </p>
                 </div>
-                <a href="#" class="btn btn-safe owlone-link" role="button">
+                <a href="https://owlone.fau.edu/chat/858e4234-d789-4261-a229-0a10f5299f1b" class="btn btn-safe owlone-link" role="button" target="_blank" rel="noopener noreferrer">
                   Open DutyBack in owlONE
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 </a>
@@ -263,6 +263,8 @@
                   Download scrubbed file (.txt)
                 </button>
               </div>
+
+              <p class="download-policy-notice">Once you attach the file in owlONE, it is processed there, logged and stored under FAU IT policies, and authorized FAU staff may access it. The Shield removes identifying details first; duty amounts, dates and statuses remain.</p>
 
               <div class="lookup-csv-container">
                 <a href="#" id="dl_lookup_csv" class="lookup-csv-link">Optional: download lookup table (.csv)</a>
@@ -319,7 +321,6 @@
               <div class="action-toolbar">
                 <button class="btn btn-primary" id="dltext">Download scrubbed text (.txt)</button>
                 <button class="btn btn-outline-navy" id="copytext">Copy text</button>
-                <button class="btn btn-secondary is-hidden" id="dltxt2">Download as .txt</button>
                 <button class="btn btn-secondary btn-key-file" id="dlkey2">Download key file (keep private)</button>
               </div>
             </div>
@@ -375,7 +376,7 @@
         <div class="network-meter">
           <div class="meter-num" id="network_count">0</div>
           <div class="meter-title">Network Requests</div>
-          <div class="meter-badge">
+          <div class="meter-badge is-hidden" id="zero_leaks_badge">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             Zero Leaks Verified
           </div>
@@ -384,7 +385,7 @@
         <div>
           <span class="section-tag">Privacy Guarantee</span>
           <h2 id="proof-heading" class="section-title proof-heading">
-            What leaves your computer? Nothing.
+            What does the Shield send anywhere? Nothing.
           </h2>
           <ul class="proof-bullets">
             <li class="proof-bullet">
@@ -463,11 +464,11 @@
 
         <div class="faq-item">
           <button class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-5">
-            <span>What is the key file and how should I handle it?</span>
+            <span>What is the lookup table?</span>
             <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="faq-content" id="faq-ans-5">
-            The key file (<code>dutyback-key-KEEP-PRIVATE.json</code>) contains the mapping between tokenized aliases (like ENT-001) and your actual entry numbers. It is created on-the-fly and stored only when you click download. Keep this file strictly private on your computer; never upload it or paste it into a chat. You can use the "Restore real values" tab to reverse tokens when DutyBack advises filing on a specific entry.
+            The lookup table (<code>dutyback-lookup-table.csv</code>) maps each anonymized token (such as <code>ENT-001</code>) back to your real customs entry number. It is built strictly in your local browser memory from the session key and downloaded only if you choose. Keep this file private on your computer and never upload or paste it into a chat. When DutyBack recommends filing actions for specific tokens, use this file to match them with your records in ACE.
           </div>
         </div>
       </div>
@@ -481,7 +482,7 @@
         <strong>Disclaimer:</strong> Demo data is fictional. Not legal advice. DutyBack does not file customs entries; your licensed customs broker or your organization files directly in ACE.
       </div>
       <div>
-        <a href="#" class="btn btn-secondary btn-sm owlone-link" role="button">
+        <a href="https://owlone.fau.edu/chat/858e4234-d789-4261-a229-0a10f5299f1b" class="btn btn-secondary btn-sm owlone-link" role="button" target="_blank" rel="noopener noreferrer">
           Open DutyBack in owlONE
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>

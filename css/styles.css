@@ -1754,3 +1754,35 @@ body {
   opacity: 0;
   pointer-events: none;
 }
+
+.download-policy-notice {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #94a3b8;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  max-width: 620px;
+}
+
+.lookup-csv-container {
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+
+.lookup-csv-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #00c2cb;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.lookup-csv-link:hover {
+  color: #00e5c0;
+}
+
+.lookup-csv-notice {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 4px;
+}
